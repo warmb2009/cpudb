@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from cpudb.codename import code_name
+from cpudb.items import CpudbItem
 
 
 class CpugetSpider(scrapy.Spider):
@@ -21,7 +22,9 @@ class CpugetSpider(scrapy.Spider):
             print(new_url)
 
     def parse(self, response):
-        for each in response.xpath('//tbody/tr/td[1]/a'):
-            name = each.xpath('./text()')
-            href = each.xpath('./@href')
-            yield
+        for each in response.xpath('//table[@class=\'processors\']/tr/td[1]/a'):
+            item = CpudbItem()
+            item['name'] = each.xpath('./text()').extract()[0]
+            item['href'] = each.xpath('./@href').extract()[0]
+
+            yield item

@@ -8,4 +8,5 @@
 
 class CpudbPipeline(object):
     def process_item(self, item, spider):
+        print(item.name + ' __ ' + item.href)
         return item
