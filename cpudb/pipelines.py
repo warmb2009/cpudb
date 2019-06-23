@@ -4,9 +4,20 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
+import requests
+import json
 
 
 class CpudbPipeline(object):
     def process_item(self, item, spider):
-        print(item.name + ' __ ' + item.href)
+        data = {'name': item['name'], 'url': item['href']}
+
+        posturl = 'http://127.0.0.1:8000/api/cpu/'
+
+        proxy = ''
+        proxies = {}
+
+        r = requests.post(posturl, data=json.dumps(data), headers={
+                          'Content-Type': 'application/json'})
+        print(r.json())
         return item
