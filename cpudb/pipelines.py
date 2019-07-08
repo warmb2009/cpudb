@@ -21,3 +21,18 @@ class CpudbPipeline(object):
                           'Content-Type': 'application/json'})
         print(r.json())
         return item
+
+
+class CpuTravelPipeline(object):
+    def process_item(self, item, spider):
+        for field in item.fields:
+            item.setdefault(field, 'NULL')
+
+        item_dict = dict(item)
+        print(item_dict)
+
+        posturl = 'http://127.0.0.1:8000/api/travelcpu/'
+        r = requests.post(posturl, data=json.dumps(item_dict), headers={
+                          'Content-Type': 'application/json'})
+        json_text = json.dumps(item_dict) + ', \n'
+        return json_text

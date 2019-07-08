@@ -9,6 +9,10 @@ class CpugetSpider(scrapy.Spider):
     allowed_domains = ['www.techpowerup.com/cpudb/']
     start_urls = []
 
+    custom_settings = {
+        'ITEM_PIPELINES': {'cpudb.pipelines.CpudbPipeline': 300}
+    }
+
     def __init__(self, *args, **kwargs):
         super(CpugetSpider, self).__init__(*args, **kwargs)
 
