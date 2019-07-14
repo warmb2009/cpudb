@@ -46,8 +46,8 @@ class CpuDetailItem(scrapy.Item):
     memory_support = scrapy.Field(default='')
 
     # core
-    cores = scrapy.Field(default='')
-    threads = scrapy.Field(default='')
+    core = scrapy.Field(default='')
+    thread = scrapy.Field(default='')
     smp_cpus = scrapy.Field(default='')
     integrated_graphics = scrapy.Field(default='')
 

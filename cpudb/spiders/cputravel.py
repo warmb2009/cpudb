@@ -28,8 +28,8 @@ name_map = {
     'Generation': 'generation',
     'Part#': 'part',
     'Memory Support': 'memory_support',
-    '# of Cores': 'cores',
-    '# of Threads': 'threads',
+    '# of Cores': 'core',
+    '# of Threads': 'thread',
     'SMP # CPUs': 'smp_cpus',
     'Integrated Graphics': 'integrated_graphics',
     'Cache L1': 'cache_l1',
@@ -96,15 +96,36 @@ class CputravelSpider(scrapy.Spider):
                     td_nodes = selector.xpath('./td')
                     td = ' '.join(map(lambda x: x.extract(), td_nodes.xpath('string(.)'))
                                   ).strip().replace('\n\t\t\t\t\t', ' ')
+                    if name_map[th] == 'memory_support':
+                        td = [item.strip() for item in td.split(',')]
+
+                    if name_map[th] == 'process_size':
+                        td = td[:-3]
+
+                    if name_map[th] == 'tdp':
+                        td = td[:-2]
+                    if name_map[th] == 'frequency':
+                        td = td[:-4]
+                    if name_map[th] == 'base_clock':
+                        td = td[:-4]
+
+                    if name_map[th] == 'die_size':
+                        td = td[:-4]
+                    if name_map[th] == 'voltage':
+                        td = td[:-2]
+                    if name_map[th] == 'multiplier':
+                        td = td[:-1]
+                    if name_map[th] == 'frequency':
+                        td = td[:-4]
 
                     item[name_map[th]] = td
             elif h1_node in ['Features', 'Notes']:
                 for selector in item_node:
                     if h1_node == 'Features':
                         li_list = selector.xpath('./td/ul/li/text()')
-
-                        item['feature'] = ','.join(
+                        item['feature'] = list(
                             map(lambda x: x.extract(), li_list))
+                        # item['feature'] = ','.join(
 
                     if h1_node == 'Notes':
                         notes_list = selector.xpath('./td/text()').extract()
