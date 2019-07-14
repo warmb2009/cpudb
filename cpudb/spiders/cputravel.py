@@ -98,25 +98,26 @@ class CputravelSpider(scrapy.Spider):
                                   ).strip().replace('\n\t\t\t\t\t', ' ')
                     if name_map[th] == 'memory_support':
                         td = [item.strip() for item in td.split(',')]
-
                     if name_map[th] == 'process_size':
                         td = td[:-3]
-
                     if name_map[th] == 'tdp':
                         td = td[:-2]
                     if name_map[th] == 'frequency':
                         td = td[:-4]
                     if name_map[th] == 'base_clock':
                         td = td[:-4]
-
                     if name_map[th] == 'die_size':
                         td = td[:-4]
                     if name_map[th] == 'voltage':
                         td = td[:-2]
-                    if name_map[th] == 'multiplier':
+                    if name_map[th] == 'multiplier' and td is not 'unknown':
                         td = td[:-1]
+                        if td == 'unknow':
+                            td = 'unknown'
                     if name_map[th] == 'frequency':
                         td = td[:-4]
+                    # if name_map[th] == 'package' and td == '':
+                    # continue
 
                     item[name_map[th]] = td
             elif h1_node in ['Features', 'Notes']:
@@ -124,7 +125,7 @@ class CputravelSpider(scrapy.Spider):
                     if h1_node == 'Features':
                         li_list = selector.xpath('./td/ul/li/text()')
                         item['feature'] = list(
-                            map(lambda x: x.extract(), li_list))
+                            map(lambda x: x.extract().replace(': ', '').strip(), li_list))
                         # item['feature'] = ','.join(
 
                     if h1_node == 'Notes':
